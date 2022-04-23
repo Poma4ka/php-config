@@ -5,8 +5,32 @@
 ## Использование:
 
 Для идентификации каталога с конфигами нужно вызвать функцию:
-< config::setPath("path_to_configs_dir"); >
+```php
+ config::setPath("path_to_configs_dir"); 
+```
 
 
 ### Получение 1 параметра
-< $parameter = config::get("config_name")->value("address") >
+```php
+$parameter = config::get("config_name")->value("name");
+```
+
+### Получение нескольких параметров
+```php
+$parameter = config::get("config_name")->values("name","surname","age");
+```
+
+### Получение всего конфига
+```php
+$parameter = config::get("config_name")->values();
+```
+
+### Получение всего конфига за исключением
+```php
+$parameter = config::get("config_name")->exclude("age");
+```
+
+### Изменить данные конфига
+```php
+$parameter = config::get("config_name")->update(["age" => 12]);
+```
