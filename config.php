@@ -77,14 +77,35 @@ class config
     {
         if (!$this->config) return null;
 
+        $this->config = $this->updateValues($this->config,$values);
+
+        return $this->writeConfig();
+    }
+
+    private function updateValues($config,array $values) : array
+    {
         foreach ($values as $key => $value) {
-            if (isset($this->config[$key])) {
-                if (gettype($this->config[$key]) === gettype($value) || !$this->config[$key]) {
-                    $this->config[$key] = $value;
+            if (isset($config[$key])) {
+                if (gettype($config[$key]) === gettype($value)) {
+                    if ((gettype($value) === "array" && !$this->isArrayIndexing($config[$key])) || gettype($value) === "object") {
+                        $config[$key] = $this->updateValues($config[$key],$value);
+                    } else {
+                        $config[$key] = $value;
+                    }
                 }
             }
         }
-        return $this->writeConfig();
+        return $config;
+    }
+
+    private function isArrayIndexing(array|object $array) :bool
+    {
+        $i = 0;
+        foreach ($array as $key => $value) {
+            if ($key !== $i) return false;
+            $i++;
+        }
+        return true;
     }
 
     private function writeConfig() :bool
